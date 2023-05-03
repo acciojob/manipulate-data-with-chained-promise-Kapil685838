@@ -1,22 +1,31 @@
 //your JS code here. If required.
-const input = [1, 2, 3, 4];
-
-function myPromise(arr) {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let result = document.getElementById('output');
-			setTimeout(() => {
-				result.innerHTML = `${arr.filter(num => num % 2 != 0)}`;
-			}, 1000);
-			setTimeout(() => {
-				result.innerHTML = `${arr.map(num => {
-					if(num % 2 == 0){
-						return num * 2;
-					}
-					return num;
-				})}`;
-			}, 2000);
-		}, 3000);
-	});
+const arr = [1, 2, 3, 4];
+function promise(arr, time) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(arr);
+    }, time);
+  });
 }
-myPromise(input);
+const op = document.getElementById("output");
+
+promise(arr, 3000)
+  .then((res) => {
+    const evenArr = res.filter((num) => {
+      return num % 2 === 0;
+    });
+    return promise(evenArr, 1000);
+  })
+  .then((res) => {
+    op.innerText = res;
+    const multiplyBy2 = res.map((num) => {
+      return num * 2;
+    });
+    return promise(multiplyBy2, 2000);
+  })
+  .then((res) => {
+    op.innerText = res;
+  })
+	.catch((error) => {
+		console.log(error);
+	});
